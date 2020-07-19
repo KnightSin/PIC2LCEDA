@@ -14,8 +14,8 @@ from numpy import mat
 #     sourcename = 'test3.bmp';
 #     invert_f = 1;
 # else :
-#     x_size = int(input('请输入X最大尺寸(cm): '));
-#     y_size = int(input('请输入y最大尺寸(cm): '));
+#     x_size = int(input('请输入X最大尺寸(mm): '));
+#     y_size = int(input('请输入y最大尺寸(mm): '));
 #     layer = int(input('请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '));
 #     sourcepath = input('请输入源文件路径(示例：C:\\Users\\sora\\Desktop\\): ');
 #     sourcename = input('请输入源文件名称(示例：test4.bmp): ');
@@ -23,8 +23,8 @@ from numpy import mat
 #     test_f = int(input('测试模式?(1, yes; 0, no):'));
 
 # 输入参数
-x_size = int(input('请输入X最大尺寸(cm): '));
-y_size = int(input('请输入y最大尺寸(cm): '));
+x_size = int(input('请输入X最大尺寸(mm): '));
+y_size = int(input('请输入y最大尺寸(mm): '));
 layer = int(input('请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '));
 sourcepath = input('请输入源文件路径(示例：C:\\Users\\sora\\Desktop\\): ');
 sourcename = input('请输入源文件名称(示例：test4.bmp): ');
@@ -83,10 +83,10 @@ print("阈值：", ret);
 # lines_mil(start_x, start_y, end_x, end_y)
 # lines_mil(start_col, start_raw, end_col, end_raw)
 lines_mil = mat([
-                 [         0,          0, x_size_mil,          0], #0
-                 [x_size_mil,          0, x_size_mil, y_size_mil], #1
-                 [x_size_mil, y_size_mil,          0, y_size_mil], #2
-                 [         0, y_size_mil,          0,          0]  #3
+                 [            0,             0, x_size_mil/10,             0], #0
+                 [x_size_mil/10,             0, x_size_mil/10, y_size_mil/10], #1
+                 [x_size_mil/10, y_size_mil/10,             0, y_size_mil/10], #2
+                 [            0, y_size_mil/10,             0,             0]  #3
                  ]);
 im_raw, im_col = img.shape[0:2]
 lastPix = 255;
@@ -101,7 +101,7 @@ for i in range(im_raw):
                line_start = j;
             elif lastPix != img[i,j] and  lastPix == 0:
                 line_end = j;
-                lines_mil=np.vstack((lines_mil, mat([ line_start, i, line_end, i])));
+                lines_mil=np.vstack((lines_mil, mat([ line_start/10, i/10, line_end/10, i/10])));
             lastPix = img[i,j];
             if (((i / img.shape[0])*100) - report_f) > 0.01:
                 report_f = report_f + 1;
@@ -124,7 +124,7 @@ for i in range(4):
     f.write('    "TRACK~1~%d~S$998~%.4f %.4f %.4f %.4f~ggc%d~0",\n' %( 10, lines_mil[i,0], lines_mil[i,1], lines_mil[i,2], lines_mil[i,3], i));
 # 图像本体
 for i in range(lines_mil.shape[0]):
-    f.write('    "TRACK~1~%d~S$999~%.4f %.4f %.4f %.4f~gge%d~0"' %( layer, lines_mil[i,0], lines_mil[i,1], lines_mil[i,2], lines_mil[i,3], i));
+    f.write('    "TRACK~0.1~%d~S$999~%.4f %.4f %.4f %.4f~gge%d~0"' %( layer, lines_mil[i,0], lines_mil[i,1], lines_mil[i,2], lines_mil[i,3], i));
     if i != lines_mil.shape[0] - 1:
         f.write(',');
     f.write('\n');
