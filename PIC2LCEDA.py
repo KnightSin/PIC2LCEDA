@@ -14,8 +14,8 @@ from numpy import mat
 #     sourcename = 'test3.bmp';
 #     invert_f = 1;
 # else :
-#     x_size = int(input('请输入X最大尺寸(mm): '));
-#     y_size = int(input('请输入y最大尺寸(mm): '));
+#     x_size = int(input('请输入X最大尺寸(cm): '));
+#     y_size = int(input('请输入y最大尺寸(cm): '));
 #     layer = int(input('请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '));
 #     sourcepath = input('请输入源文件路径(示例：C:\\Users\\sora\\Desktop\\): ');
 #     sourcename = input('请输入源文件名称(示例：test4.bmp): ');
@@ -23,8 +23,8 @@ from numpy import mat
 #     test_f = int(input('测试模式?(1, yes; 0, no):'));
 
 # 输入参数
-x_size = int(input('请输入X最大尺寸(mm): '));
-y_size = int(input('请输入y最大尺寸(mm): '));
+x_size = int(input('请输入X最大尺寸(cm): '));
+y_size = int(input('请输入y最大尺寸(cm): '));
 layer = int(input('请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '));
 sourcepath = input('请输入源文件路径(示例：C:\\Users\\sora\\Desktop\\): ');
 sourcename = input('请输入源文件名称(示例：test4.bmp): ');
