@@ -5,34 +5,34 @@ import numpy as np
 from numpy import mat
 import datetime
 
-# 输入参数
-test_f = int(input('测试模式?(1, yes; 0, no):'))
-if test_f == 1:
-    x_size = 50
-    y_size = 50
-    layer = 7
-    sourcepath = 'C:\\Users\\sora\\Desktop\\'
-    sourcename = 'test3.bmp'
-    invert_f = 1
-    threshold = 127  # 阈值
-else:
-    x_size = int(input('请输入X最大尺寸(mm): '))
-    y_size = int(input('请输入y最大尺寸(mm): '))
-    layer = int(input(
-        '请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '))
-    sourcepath = input('请输入源文件路径(示例：C:\\Users\\sora\\Desktop\\): ')
-    sourcename = input('请输入源文件名称(示例：test4.bmp): ')
-    invert_f = int(input('图像取反?(0,不取反; 1,取反): '))
-    threshold = int(input('图像阈值(范围0~255，典型值127): '))
-
 ## 输入参数
-#x_size = int(input('请输入X最大尺寸(mm): '));
-#y_size = int(input('请输入y最大尺寸(mm): '));
-#layer = int(input('请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '));
-#sourcepath = input('请输入源文件路径(示例：C:\\Users\\sora\\Desktop\\): ');
-#sourcename = input('请输入源文件名称(示例：test4.bmp): ');
-#invert_f = int(input('图像取反?(0,不取反; 1,取反): '));
-#threshold = int(input('图像阈值(范围0~255，典型值127): '));
+#test_f = int(input('测试模式?(1, yes; 0, no):'))
+#if test_f == 1:
+#    x_size = 50
+#    y_size = 50
+#    layer = 7
+#    sourcepath = 'C:\\Users\\sora\\Desktop\\'
+#    sourcename = 'test3.bmp'
+#    invert_f = 1
+#    threshold = 127  # 阈值
+#else:
+#    x_size = int(input('请输入X最大尺寸(mm): '))
+#    y_size = int(input('请输入y最大尺寸(mm): '))
+#    layer = int(input(
+#        '请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '))
+#    sourcepath = input('请输入源文件路径(示例：C:\\Users\\sora\\Desktop\\): ')
+#    sourcename = input('请输入源文件名称(示例：test4.bmp): ')
+#    invert_f = int(input('图像取反?(0,不取反; 1,取反): '))
+#    threshold = int(input('图像阈值(范围0~255，典型值127): '))
+
+# 输入参数
+x_size = int(input('请输入X最大尺寸(mm): '));
+y_size = int(input('请输入y最大尺寸(mm): '));
+layer = int(input('请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '));
+sourcepath = input('请输入源文件路径(示例：C:\\Users\\sora\\Desktop\\): ');
+sourcename = input('请输入源文件名称(示例：test4.bmp): ');
+invert_f = int(input('图像取反?(0,不取反; 1,取反): '));
+threshold = int(input('图像阈值(范围0~255，典型值127): '));
 print('\n| 参数\t\t| 值 \t')
 print('---------------------------')
 print('| X最大尺寸\t| %d' % x_size)
