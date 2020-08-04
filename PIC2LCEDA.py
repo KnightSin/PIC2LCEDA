@@ -19,9 +19,12 @@ layerstr = ['NULL','顶层', '底层', '顶层丝印层', '底层丝印层', '�
 #    sourcename = 'test3.bmp'
 #    invert_f = 1
 #    threshold = 127  # 阈值
+#    width = 5
+
 # else:
 #    x_size = int(input('请输入X最大尺寸(mm): '))
 #    y_size = int(input('请输入y最大尺寸(mm): '))
+#    width = int(input('请输入线宽(mil，越小精度越高，但可能导致卡顿，典型值5mil): '))
 #    layer = int(input(
 #        '请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '))
 #    sourcepath = input('请输入源文件路径(示例：C:\\Users\\sora\\Desktop\\): ')
@@ -30,31 +33,32 @@ layerstr = ['NULL','顶层', '底层', '顶层丝印层', '底层丝印层', '�
 #    threshold = int(input('图像阈值(范围0~255，典型值127): '))
 
 # 输入参数
-x_size = int(input('请输入X最大尺寸(mm): '))
-y_size = int(input('请输入y最大尺寸(mm): '))
+x_size = float(input('请输入X最大尺寸(mm): '))
+y_size = float(input('请输入y最大尺寸(mm): '))
+width = int(input('请输入线宽(mil，越小精度越高，但可能导致卡顿，典型值5mil): '))
 layer = int(input(
     '请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '))
-sourcepath = input('请输入源文件路径(示例：C:\\Users\\sora\\Desktop\\): ')
-if not sourcepath.endswith('\\'):
-    sourcepath = sourcepath + '\\'
-sourcename = input('请输入源文件名称(示例：test4.bmp): ')
+sourcefullpath = input('请输入源文件完整路径(示例：C:\\Users\\sora\\Desktop\\test4.bmp，可直接拖曳文件至窗口): ')
 invert_f = int(input('图像取反?(0,不取反 1,取反): '))
 threshold = int(input('图像阈值(范围0~255，典型值127): '))
 
 # 打印输入参数
 print('\n| 参数\t\t| 值 \t')
 print('------------------------------------------------------')
-print('| X最大尺寸\t| %d mm' % x_size)
-print('| y最大尺寸\t| %d mm' % y_size)
+print('| X最大尺寸\t| %.2f mm' % x_size)
+print('| y最大尺寸\t| %.2f mm' % y_size)
 print('| 所在层\t| %s' % layerstr[layer])
-print('| 源文件路径\t| %s' % sourcepath)
-print('| 源文件名称\t| %s' % sourcename)
+print('| 源文件路径\t| %s' % sourcefullpath)
 print('| 图像取反\t| %s' % ('true' if invert_f == 1 else 'false'))
 print("| 阈值\t\t| %d\n" % threshold)
+print("| 线宽\t\t| %d mil\n" % width)
 
 # 预设参数
 origin_x = 0  # 原点x坐标
 origin_y = 0  # 原点y坐标
+sourcepath = sourcefullpath.rsplit('\\', 1)[0] + '\\'
+sourcename = sourcefullpath.rsplit('\\', 1)[1]
+
 path = sourcepath + 'LCEDA_' + sourcename.split('.', 1)[0] + '_' + datetime.datetime.now(
 ).__format__("%Y_%m_%d_%H_%M_%S") +'\\'  # 目标文件路径
 if not os.path.exists(path):
@@ -63,8 +67,8 @@ if not os.path.exists(path):
 lib_filename = 'LIB_' + sourcename.split('.', 1)[0] + '.json'  # Pib文件名
 pcb_filename = 'PCB_' + sourcename.split('.', 1)[0] + '.json'  # PCB文件名
 # 单位转换
-x_size_mil = x_size/2.54*100
-y_size_mil = y_size/2.54*100
+x_size_mil = int(x_size/2.54*100)
+y_size_mil = int(y_size/2.54*100)
 
 # 图片处理
 # 将数据存储在I矩阵
@@ -79,7 +83,7 @@ if im_raw/y_size_mil > im_col/x_size_mil:
 else:
     k = x_size_mil/im_col
     y_size_mil = int(im_raw * k) + 1
-img = cv2.resize(img, (int(im_col*k), int(im_raw*k)))
+img = cv2.resize(img, (int(im_col*k/width), int(im_raw*k/width)))
 # 色相取反
 if invert_f != 0:
     img = cv2.bitwise_not(img)
@@ -128,7 +132,7 @@ for i in range(im_raw1):
         elif lastPix != img[i, j] and lastPix == 0:
             line_end = j
             lines_mil = np.vstack(
-                (lines_mil, mat([line_start/10, i/10, line_end/10, i/10])))
+                (lines_mil, mat([line_start/10*width, i*width/10, line_end/10*width, i*width/10])))
         lastPix = img[i, j]
         if (((i / img.shape[0])*100) - report_f) > 0.01:
             if report_f % 10 == 0:
@@ -163,8 +167,8 @@ for i in range(4):
         layer, lines_mil[i, 0], lines_mil[i, 1], lines_mil[i, 2], lines_mil[i, 3], i))
 # 写入图像数据
 for i in range(lines_mil.shape[0]):
-    f.write('    "TRACK~0.1~%d~~%.4f %.4f %.4f %.4f~gge%d~0"' % (
-        layer, lines_mil[i, 0], lines_mil[i, 1], lines_mil[i, 2], lines_mil[i, 3], i))
+    f.write('    "TRACK~%.1f~%d~~%.4f %.4f %.4f %.4f~gge%d~0"' % (
+        width/10, layer, lines_mil[i, 0], lines_mil[i, 1], lines_mil[i, 2], lines_mil[i, 3], i))
     if i != lines_mil.shape[0] - 1:
         f.write(',')
     f.write('\n')
@@ -221,6 +225,7 @@ f.write('\n| 参数\t\t| 值 \n'),
 f.write('------------------------------------------------------\n')
 f.write('| 原图X像素\t| %.4f pix\n' % im_col)
 f.write('| 原图y像素\t| %.4f pix\n' % im_raw)
+f.write("| 线宽\t\t| %d mil\n" % width)
 f.write('| X最大尺寸\t| %.4f mm\n' % x_size)
 f.write('| y最大尺寸\t| %.4f mm\n' % y_size)
 f.write('| X实际像素\t| %.4f pix\n' % x_size_mil)
