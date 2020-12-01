@@ -39,6 +39,17 @@ layerstr = [
 #     threshold = int(input('图像阈值(范围0~255，典型值127): '))
 
 # 输入参数
+# linux下支持相对路径
+sourcefullpath = input('请输入图片路径(可直接拖曳文件至窗口) \
+    \n示例：windows10:    C:\\Users\\sora\\Desktop\\test4.bmp \
+    \n     Linux:  /home/kearney/Documents/Lan/python/PIC2LCEDA/ddl.bmp  \n:')
+# 由文件绝对路径分离出路径和文件名
+if os.path.isfile(sourcefullpath):
+    (sourcepath, sourcename) = os.path.split(sourcefullpath)
+    print((sourcepath, sourcename))
+else:
+    print("文件不存在！！！")
+    raise
 x_size = float(input('请输入X最大尺寸(mm): '))
 y_size = float(input('请输入y最大尺寸(mm): '))
 width = int(input('请输入线宽(mil，越小精度越高，但可能导致卡顿，典型值5mil): '))
@@ -46,8 +57,7 @@ layer = int(
     input(
         '请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '
     ))
-sourcefullpath = input(
-    '请输入源文件完整路径(示例：C:\\Users\\sora\\Desktop\\test4.bmp，可直接拖曳文件至窗口): ')
+
 invert_f = int(input('图像取反?(0,不取反 1,取反): '))
 threshold = int(input('图像阈值(范围0~255，典型值127): '))
 
@@ -65,15 +75,6 @@ print("| 线宽\t\t| %d mil\n" % width)
 # 预设参数
 origin_x = 0  # 原点x坐标
 origin_y = 0  # 原点y坐标
-
-# 由文件绝对路径分离出路径和文件名
-if os.path.isfile(sourcefullpath):
-    (sourcepath, sourcename) = os.path.split(sourcefullpath)
-    print((sourcepath, sourcename))
-else:
-    print("文件不存在！！！")
-    raise
-
 path = os.path.join(sourcepath, 'LCEDA' + str(datetime.datetime.now()))
 if not os.path.exists(path):
     # 如果不存在则创建目录
