@@ -65,26 +65,33 @@ print("| 线宽\t\t| %d mil\n" % width)
 # 预设参数
 origin_x = 0  # 原点x坐标
 origin_y = 0  # 原点y坐标
-sourcepath = sourcefullpath.rsplit('\\', 1)[0] + '\\'
-sourcename = sourcefullpath.rsplit('\\', 1)[1]
 
-path = sourcepath + 'LCEDA_' + sourcename.split(
-    '.', 1)[0] + '_' + datetime.datetime.now().__format__(
-        "%Y_%m_%d_%H_%M_%S") + '\\'  # 目标文件路径
+# 由文件绝对路径分离出路径和文件名
+if os.path.isfile(sourcefullpath):
+    (sourcepath, sourcename) = os.path.split(sourcefullpath)
+    print((sourcepath, sourcename))
+else:
+    print("文件不存在！！！")
+    raise
+
+path = os.path.join(sourcepath, 'LCEDA' + str(datetime.datetime.now()))
 if not os.path.exists(path):
     # 如果不存在则创建目录
     os.makedirs(path)
-lib_filename = 'LIB_' + sourcename.split('.', 1)[0] + '.json'  # Pib文件名
-pcb_filename = 'PCB_' + sourcename.split('.', 1)[0] + '.json'  # PCB文件名
+
+lib_filename = 'LIB_' + sourcename + '.json'  # Lib文件名
+pcb_filename = 'PCB_' + sourcename + '.json'  # PCB文件名
+
 # 单位转换
 x_size_mil = int(x_size / 2.54 * 100)
 y_size_mil = int(y_size / 2.54 * 100)
 
 # 图片处理
 # 将数据存储在I矩阵
-img = cv2.imread(sourcepath + sourcename)
+img = cv2.imread(sourcefullpath)
 # 备份原图
-cv2.imwrite(path + 'pre.jpg', img, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+cv2.imwrite(os.path.join(path, 'pre.jpg'), img,
+            [int(cv2.IMWRITE_JPEG_QUALITY), 95])
 # 图片缩放
 im_raw, im_col = img.shape[0:2]
 if im_raw / y_size_mil > im_col / x_size_mil:
@@ -117,7 +124,8 @@ if layer == 2 or layer == 4 or layer == 6 or layer == 8:
 # 旋转
 # img = img.transpose()
 # 备份处理后的图片
-cv2.imwrite(path + 'after.jpg', img, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+cv2.imwrite(os.path.join(path, 'after.jpg'), img,
+            [int(cv2.IMWRITE_JPEG_QUALITY), 95])
 
 # 将图片处理成线条
 # 图片-> 线段
@@ -164,7 +172,7 @@ for i in range(im_raw1):
 print('| 100%\t|')
 # 将图片数据写入Lib文件
 # 打开文件，文件不存在则建立，文件已存在则覆盖
-f = open(path + lib_filename, "w")
+f = open(os.path.join(path, lib_filename), "w")
 # 写入内容
 f.write(
     '{\n    "head": {\n      "docType": "4",\n      "editorVersion": "6.4.2",\n      "newgId": true,\n      "c_para": {\n        "package": "%s",\n        "pre": "PIC?",\n        "Contributor": "LCNB",\n        "link": ""\n      },\n      "hasIdFlag": true,\n      "x": %.4f,\n      "y": %.4f\n    },\n'
@@ -241,7 +249,7 @@ f.close()
 
 # 将边框数据写入PCB文件
 # 打开文件
-f = open(path + pcb_filename, "w")
+f = open(os.path.join(path, pcb_filename), "w")
 # 写入内容
 f.write(
     '{\n    "head": {\n      "docType": "3",\n      "editorVersion": "6.4.2",\n      "newgId": true,\n      "c_para": {},\n      "hasIdFlag": true\n    },\n    "canvas": "CA~1000~1000~#000000~yes~#FFFFFF~39.370079~1000~1000~line~3.937008~mm~1~45~~0.5~%.4f~%.4f~0~yes",\n    "shape": [\n'
@@ -278,7 +286,7 @@ f.close()
 # 输出提示信息
 print('\nstep4:')
 # 写入内容
-f = open(path + 'info.txt', "w")
+f = open(os.path.join(path, 'info.txt'), "w")
 f.write('\n| 参数\t\t| 值 \n'),
 f.write('------------------------------------------------------\n')
 f.write('| 原图X像素\t| %.4f pix\n' % im_col)
