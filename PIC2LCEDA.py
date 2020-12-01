@@ -39,7 +39,7 @@ layerstr = [
 #     threshold = int(input('图像阈值(范围0~255，典型值127): '))
 
 # 输入参数
-# linux下支持相对路径
+# linux deepin,windows10均测试过支持相对路径
 sourcefullpath = input('请输入图片路径(可直接拖曳文件至窗口) \
     \n示例：windows10:    C:\\Users\\sora\\Desktop\\test4.bmp \
     \n     Linux:  /home/kearney/Documents/Lan/python/PIC2LCEDA/ddl.bmp  \n:')
@@ -75,9 +75,11 @@ print("| 线宽\t\t| %d mil\n" % width)
 # 预设参数
 origin_x = 0  # 原点x坐标
 origin_y = 0  # 原点y坐标
-path = os.path.join(sourcepath, 'LCEDA' + str(datetime.datetime.now()))
+path = os.path.join(
+    sourcepath,
+    'LCEDA' + str(datetime.datetime.now().strftime("%Y-%m-%d-%H-%M")))
 if not os.path.exists(path):
-    # 如果不存在则创建目录
+    # 如果不存在则创建目录,win目录不能含有冒号
     os.makedirs(path)
 
 lib_filename = 'LIB_' + sourcename + '.json'  # Lib文件名
