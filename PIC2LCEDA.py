@@ -15,7 +15,6 @@ layerstr = [
 # 输入参数
 # test_f = int(input('测试模式?(1, yes 0, no):'))
 # if test_f == 1:
-# if True:
 #     x_size = 50
 #     y_size = 50
 #     layer = 7
@@ -24,15 +23,13 @@ layerstr = [
 #     invert_f = 1
 #     threshold = 127  # 阈值
 #     width = 5
-
 # else:
 #     x_size = int(input('请输入X最大尺寸(mm): '))
 #     y_size = int(input('请输入y最大尺寸(mm): '))
 #     width = int(input('请输入线宽(mil，越小精度越高，但可能导致卡顿，典型值5mil): '))
 #     layer = int(
-#         input(
-#             '请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '
-#         ))
+#         input('请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；\
+#         6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '))
 #     sourcepath = input('请输入源文件路径(示例：C:\\Users\\sora\\Desktop\\): ')
 #     sourcename = input('请输入源文件名称(示例：test4.bmp): ')
 #     invert_f = int(input('图像取反?(0,不取反 1,取反): '))
@@ -54,9 +51,8 @@ x_size = float(input('请输入X最大尺寸(mm): '))
 y_size = float(input('请输入y最大尺寸(mm): '))
 width = int(input('请输入线宽(mil，越小精度越高，但可能导致卡顿，典型值5mil): '))
 layer = int(
-    input(
-        '请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '
-    ))
+    input('请输入所在层(1，顶层；2，底层；3，顶层丝印层；4，底层丝印层；5，顶层焊盘层；\
+6，底层焊盘层；7，顶层阻焊层；8，底层阻焊层；10，边框层；11，文档层): '))
 
 invert_f = int(input('图像取反?(0,不取反 1,取反): '))
 threshold = int(input('图像阈值(范围0~255，典型值127): '))
@@ -314,7 +310,7 @@ f.close()
 print('| 100%\t|')
 
 # 写入完成
-print(
-    '\n生成成功！\nLib文件路径: %s\nPCB文件路径: %s\n实际图片大小: \tX %.4f mil,\tY %.4f mil \n\t\tX %.4f mm,\t\tY %.4f mm'
-    % (path + lib_filename, path + pcb_filename, x_size_mil, y_size_mil,
+print('\n生成成功！\nLib文件路径: %s\nPCB文件路径: %s\
+    \n实际图片大小: \tX %.4f mil,\tY %.4f mil \n\t\tX %.4f mm,\t\tY %.4f mm' %
+      (path + lib_filename, path + pcb_filename, x_size_mil, y_size_mil,
        x_size_mil / 100 * 2.54, y_size_mil / 100 * 2.54))
