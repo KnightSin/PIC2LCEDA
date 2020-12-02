@@ -73,7 +73,7 @@ origin_x = 0  # 原点x坐标
 origin_y = 0  # 原点y坐标
 path = os.path.join(
     sourcepath,
-    'LCEDA' + str(datetime.datetime.now().strftime("%Y-%m-%d-%H-%M")))
+    'LCEDA' + str(datetime.datetime.now().strftime("%Y-%m-%d_%H_%M_%S")))
 if not os.path.exists(path):
     # 如果不存在则创建目录,win目录不能含有冒号
     os.makedirs(path)
@@ -174,42 +174,45 @@ print('| 100%\t|')
 f = open(os.path.join(path, lib_filename), "w")
 # 写入内容
 f.write(
-    '{\n    "head": {\n      "docType": "4",\n      "editorVersion": "6.4.2",\n      "newgId": true,\n      "c_para": {\n        "package": "%s",\n        "pre": "PIC?",\n        "Contributor": "LCNB",\n        "link": ""\n      },\n      "hasIdFlag": true,\n      "x": %.4f,\n      "y": %.4f\n    },\n'
-    % (sourcename.split('.', 1)[0], (lines_mil[0, 0] + lines_mil[2, 0]) / 2,
-       (lines_mil[0, 1] + lines_mil[2, 1]) / 2))
+    '{\n    "head": {\n      "docType": "4",\n      "editorVersion": "6.4.2",\
+    \n      "newgId": true,\n      "c_para": {\n        "package": "%s",\
+    \n        "pre": "PIC?",\n        "Contributor": "LCNB",\
+    \n        "link": ""\n      },\n      "hasIdFlag": true,\
+    \n      "x": %.4f,\n      "y": %.4f\n    },\n' %
+    (sourcename.split('.', 1)[0], (lines_mil[0, 0] + lines_mil[2, 0]) / 2,
+     (lines_mil[0, 1] + lines_mil[2, 1]) / 2))
 # 写入内容
 f.write(
-    '    "canvas": "CA~1000~1000~#000000~yes~#FFFFFF~10~1000~1000~line~10~mil~1~45~~0.5~%.4f~%.4f~0~none",\n    "shape": [\n'
-    % ((lines_mil[0, 0] + lines_mil[2, 0]) / 2,
-       (lines_mil[0, 1] + lines_mil[2, 1]) / 2))
+    '    "canvas": "CA~1000~1000~#000000~yes~#FFFFFF~10~1000~1000~line~10~mil\
+~1~45~~0.5~%.4f~%.4f~0~none",\n    "shape": [\n' %
+    ((lines_mil[0, 0] + lines_mil[2, 0]) / 2,
+     (lines_mil[0, 1] + lines_mil[2, 1]) / 2))
 # 开始打印写入进度
 report_f = 1
 print('\nstep2:')
 # 写入实心填充-铜皮数据
-f.write(
-    '    "SOLIDREGION~1~~M %.4f %.4f L %.4f %.4f L %.4f %.4f L%.4f,%.4f Z~solid~ggb0~~~~0",\n'
-    % (
-        lines_mil[0, 0],
-        lines_mil[0, 1],
-        lines_mil[0, 2],
-        lines_mil[0, 3],
-        lines_mil[2, 0],
-        lines_mil[2, 1],
-        lines_mil[2, 2],
-        lines_mil[2, 3],
-    ))
-f.write(
-    '    "SOLIDREGION~2~~M %.4f %.4f L %.4f %.4f L %.4f %.4f L%.4f,%.4f Z~solid~ggb1~~~~0",\n'
-    % (
-        lines_mil[0, 0],
-        lines_mil[0, 1],
-        lines_mil[0, 2],
-        lines_mil[0, 3],
-        lines_mil[2, 0],
-        lines_mil[2, 1],
-        lines_mil[2, 2],
-        lines_mil[2, 3],
-    ))
+f.write('    "SOLIDREGION~1~~M %.4f %.4f L %.4f %.4f L %.4f %.4f L%.4f,%.4f Z~\
+solid~ggb0~~~~0",\n' % (
+    lines_mil[0, 0],
+    lines_mil[0, 1],
+    lines_mil[0, 2],
+    lines_mil[0, 3],
+    lines_mil[2, 0],
+    lines_mil[2, 1],
+    lines_mil[2, 2],
+    lines_mil[2, 3],
+))
+f.write('    "SOLIDREGION~2~~M %.4f %.4f L %.4f %.4f L %.4f %.4f L%.4f,%.4f Z~\
+solid~ggb1~~~~0",\n' % (
+    lines_mil[0, 0],
+    lines_mil[0, 1],
+    lines_mil[0, 2],
+    lines_mil[0, 3],
+    lines_mil[2, 0],
+    lines_mil[2, 1],
+    lines_mil[2, 2],
+    lines_mil[2, 3],
+))
 # 写入边框数据
 for i in range(4):
     f.write('    "TRACK~1~%d~~%.4f %.4f %.4f %.4f~ggc%d~0",\n' %
@@ -234,14 +237,51 @@ for i in range(lines_mil.shape[0]):
         report_f = report_f + 1
 print('| 100%\t|')
 # 写入内容
-f.write(
-    '],\n"layers": [\n  "1~TopLayer~#FF0000~true~true~true~",\n  "2~BottomLayer~#0000FF~true~false~true~",\n  "3~TopSilkLayer~#FFCC00~true~false~true~",\n  "4~BottomSilkLayer~#66CC33~true~false~true~",\n  "5~TopPasteMaskLayer~#808080~true~false~true~",\n  "6~BottomPasteMaskLayer~#800000~true~false~true~",\n  "7~TopSolderMaskLayer~#800080~true~false~true~0.3",\n  "8~BottomSolderMaskLayer~#AA00FF~true~false~true~0.3",\n  "9~Ratlines~#6464FF~false~false~true~",\n  "10~BoardOutLine~#FF00FF~true~false~true~",\n  "11~Multi-Layer~#C0C0C0~true~false~true~",\n  "12~Document~#FFFFFF~true~false~true~",\n  "13~TopAssembly~#33CC99~false~false~false~",\n  "14~BottomAssembly~#5555FF~false~false~false~",\n  "15~Mechanical~#F022F0~false~false~false~",\n  "19~3DModel~#66CCFF~false~false~false~",\n  "21~Inner1~#999966~false~false~false~~",\n  "22~Inner2~#008000~false~false~false~~",\n  "23~Inner3~#00FF00~false~false~false~~",\n  "24~Inner4~#BC8E00~false~false~false~~",\n  "25~Inner5~#70DBFA~false~false~false~~",\n  "26~Inner6~#00CC66~false~false~false~~",\n  "27~Inner7~#9966FF~false~false~false~~",\n  "28~Inner8~#800080~false~false~false~~",\n  "29~Inner9~#008080~false~false~false~~",\n  "30~Inner10~#15935F~false~false~false~~",\n  "31~Inner11~#000080~false~false~false~~",\n  "32~Inner12~#00B400~false~false~false~~",\n  "33~Inner13~#2E4756~false~false~false~~",\n  "34~Inner14~#99842F~false~false~false~~",\n  "35~Inner15~#FFFFAA~false~false~false~~",\n  "36~Inner16~#99842F~false~false~false~~",\n  "37~Inner17~#2E4756~false~false~false~~",\n  "38~Inner18~#3535FF~false~false~false~~",\n  "39~Inner19~#8000BC~false~false~false~~",\n  "40~Inner20~#43AE5F~false~false~false~~",\n  "41~Inner21~#C3ECCE~false~false~false~~",\n  "42~Inner22~#728978~false~false~false~~",\n  "43~Inner23~#39503F~false~false~false~~",\n  "44~Inner24~#0C715D~false~false~false~~",\n  "45~Inner25~#5A8A80~false~false~false~~",\n  "46~Inner26~#2B937E~false~false~false~~",\n  "47~Inner27~#23999D~false~false~false~~",\n  "48~Inner28~#45B4E3~false~false~false~~",\n  "49~Inner29~#215DA1~false~false~false~~",\n  "50~Inner30~#4564D7~false~false~false~~",\n  "51~Inner31~#6969E9~false~false~false~~",\n  "52~Inner32~#9069E9~false~false~false~~",\n  "99~ComponentShapeLayer~#00CCCC~false~false~false~",\n  "100~LeadShapeLayer~#CC9999~false~false~false~",\n  "Hole~Hole~#222222~~false~true~",\n  "DRCError~DRCError~#FAD609~~false~true~"\n],\n"objects": [\n  "All~true~false",\n  "Component~true~true",\n  "Prefix~true~true",\n  "Name~true~false",\n  "Track~true~true",\n  "Pad~true~true",\n  "Via~true~true",\n  "Hole~true~true",\n  "Copper_Area~true~true",\n  "Circle~true~true",\n  "Arc~true~true",\n  "Solid_Region~true~true",\n  "Text~true~true",\n  "Image~true~true",\n  "Rect~true~true",\n  "Dimension~true~true",\n  "Protractor~true~true"\n],\n'
-)
+f.write('],\n"layers": [\n  "1~TopLayer~#FF0000~true~true~true~",\n  "2~\
+BottomLayer~#0000FF~true~false~true~",\n  "3~TopSilkLayer~#FFCC00~true~\
+false~true~",\n  "4~BottomSilkLayer~#66CC33~true~false~true~",\n  "5~\
+TopPasteMaskLayer~#808080~true~false~true~",\n  "6~BottomPasteMaskLayer\
+~#800000~true~false~true~",\n  "7~TopSolderMaskLayer~#800080~true~false~\
+true~0.3",\n  "8~BottomSolderMaskLayer~#AA00FF~true~false~true~0.3",\
+\n  "9~Ratlines~#6464FF~false~false~true~",\n  "10~BoardOutLine~#FF00FF~\
+true~false~true~",\n  "11~Multi-Layer~#C0C0C0~true~false~true~",\
+\n  "12~Document~#FFFFFF~true~false~true~",\n  "13~TopAssembly~#33CC99~\
+false~false~false~",\n  "14~BottomAssembly~#5555FF~false~false~false~",\
+\n  "15~Mechanical~#F022F0~false~false~false~",\n  "19~3DModel~#66CCFF~\
+false~false~false~",\n  "21~Inner1~#999966~false~false~false~~",\
+\n  "22~Inner2~#008000~false~false~false~~",\n  "23~Inner3~#00FF00~false~\
+false~false~~",\n  "24~Inner4~#BC8E00~false~false~false~~",\n  "25~Inner5~\
+#70DBFA~false~false~false~~",\n  "26~Inner6~#00CC66~false~false~false~~",\
+\n  "27~Inner7~#9966FF~false~false~false~~",\n  "28~Inner8~#800080~false~\
+false~false~~",\n  "29~Inner9~#008080~false~false~false~~",\n  "30~Inner10\
+~#15935F~false~false~false~~",\n  "31~Inner11~#000080~false~false~false~~",\
+\n  "32~Inner12~#00B400~false~false~false~~",\n  "33~Inner13~#2E4756~false~\
+false~false~~",\n  "34~Inner14~#99842F~false~false~false~~",\n  "35~Inner15~\
+#FFFFAA~false~false~false~~",\n  "36~Inner16~#99842F~false~false~false~~",\
+\n  "37~Inner17~#2E4756~false~false~false~~",\n  "38~Inner18~#3535FF~false~\
+false~false~~",\n  "39~Inner19~#8000BC~false~false~false~~",\n  "40~Inner20~\
+#43AE5F~false~false~false~~",\n  "41~Inner21~#C3ECCE~false~false~false~~",\
+\n  "42~Inner22~#728978~false~false~false~~",\n  "43~Inner23~#39503F~false~\
+false~false~~",\n  "44~Inner24~#0C715D~false~false~false~~",\n  "45~Inner25\
+~#5A8A80~false~false~false~~",\n  "46~Inner26~#2B937E~false~false~false~~",\
+\n  "47~Inner27~#23999D~false~false~false~~",\n  "48~Inner28~#45B4E3~false~\
+false~false~~",\n  "49~Inner29~#215DA1~false~false~false~~",\n  "50~Inner30\
+~#4564D7~false~false~false~~",\n  "51~Inner31~#6969E9~false~false~false~~",\
+\n  "52~Inner32~#9069E9~false~false~false~~",\n  "99~ComponentShapeLayer\
+~#00CCCC~false~false~false~",\n  "100~LeadShapeLayer~#CC9999~false~false~\
+false~",\n  "Hole~Hole~#222222~~false~true~",\n  "DRCError~DRCError~#FAD609\
+~~false~true~"\n],\n"objects": [\n  "All~true~false",\
+\n  "Component~true~true",\n  "Prefix~true~true",\n  "Name~true~false",\
+\n  "Track~true~true",\n  "Pad~true~true",\n  "Via~true~true",\
+\n  "Hole~true~true",\n  "Copper_Area~true~true",\n  "Circle~true~true",\
+\n  "Arc~true~true",\n  "Solid_Region~true~true",\n  "Text~true~true",\
+\n  "Image~true~true",\n  "Rect~true~true",\n  "Dimension~true~true",\
+\n  "Protractor~true~true"\n],\n')
 # 写入内容
-f.write(
-    '  "BBox": {\n    "x": %.1f,\n    "y": %.1f,\n    "width": %.1f,\n    "height": %.1f\n  },'
-    % ((lines_mil[0, 0] + lines_mil[2, 0]) / 2,
-       (lines_mil[0, 1] + lines_mil[2, 1]) / 2, x_size_mil, y_size_mil))
+f.write('  "BBox": {\n    "x": %.1f,\n    "y": %.1f,\n    "width": %.1f,\
+\n    "height": %.1f\n  },' %
+        ((lines_mil[0, 0] + lines_mil[2, 0]) / 2,
+         (lines_mil[0, 1] + lines_mil[2, 1]) / 2, x_size_mil, y_size_mil))
 # 写入内容
 f.write('  "netColors": {}\n}')
 f.close()
@@ -251,9 +291,12 @@ f.close()
 f = open(os.path.join(path, pcb_filename), "w")
 # 写入内容
 f.write(
-    '{\n    "head": {\n      "docType": "3",\n      "editorVersion": "6.4.2",\n      "newgId": true,\n      "c_para": {},\n      "hasIdFlag": true\n    },\n    "canvas": "CA~1000~1000~#000000~yes~#FFFFFF~39.370079~1000~1000~line~3.937008~mm~1~45~~0.5~%.4f~%.4f~0~yes",\n    "shape": [\n'
-    % ((lines_mil[0, 0] + lines_mil[2, 0]) / 2,
-       (lines_mil[0, 1] + lines_mil[2, 1]) / 2))
+    '{\n    "head": {\n      "docType": "3",\n      "editorVersion": "6.4.2",\
+\n      "newgId": true,\n      "c_para": {},\n      "hasIdFlag": true\n    },\
+\n    "canvas": "CA~1000~1000~#000000~yes~#FFFFFF~39.370079~1000~1000~line~\
+3.937008~mm~1~45~~0.5~%.4f~%.4f~0~yes",\n    "shape": [\n' %
+    ((lines_mil[0, 0] + lines_mil[2, 0]) / 2,
+     (lines_mil[0, 1] + lines_mil[2, 1]) / 2))
 # 输出提示信息
 print('\nstep3:')
 # 写入边框数据
@@ -267,18 +310,59 @@ for i in range(4):
 # 完成
 print('| 100%\t|')
 # 写入内容
-f.write(
-    '    ],\n"layers": [\n  "1~TopLayer~#FF0000~true~false~true~",\n  "2~BottomLayer~#0000FF~true~false~true~",\n  "3~TopSilkLayer~#FFCC00~true~false~true~",\n  "4~BottomSilkLayer~#66CC33~true~true~true~",\n  "5~TopPasteMaskLayer~#808080~true~false~true~",\n  "6~BottomPasteMaskLayer~#800000~true~false~true~",\n  "7~TopSolderMaskLayer~#800080~true~false~true~0.3",\n  "8~BottomSolderMaskLayer~#AA00FF~true~false~true~0.3",\n  "9~Ratlines~#6464FF~false~false~true~",\n  "10~BoardOutLine~#FF00FF~true~false~true~",\n  "11~Multi-Layer~#C0C0C0~true~false~true~",\n  "12~Document~#FFFFFF~true~false~true~",\n  "13~TopAssembly~#33CC99~false~false~false~",\n  "14~BottomAssembly~#5555FF~false~false~false~",\n  "15~Mechanical~#F022F0~false~false~false~",\n  "19~3DModel~#66CCFF~false~false~false~",\n  "21~Inner1~#999966~false~false~false~~",\n  "22~Inner2~#008000~false~false~false~~",\n  "23~Inner3~#00FF00~false~false~false~~",\n  "24~Inner4~#BC8E00~false~false~false~~",\n  "25~Inner5~#70DBFA~false~false~false~~",\n  "26~Inner6~#00CC66~false~false~false~~",\n  "27~Inner7~#9966FF~false~false~false~~",\n  "28~Inner8~#800080~false~false~false~~",\n  "29~Inner9~#008080~false~false~false~~",\n  "30~Inner10~#15935F~false~false~false~~",\n  "31~Inner11~#000080~false~false~false~~",\n  "32~Inner12~#00B400~false~false~false~~",\n  "33~Inner13~#2E4756~false~false~false~~",\n  "34~Inner14~#99842F~false~false~false~~",\n  "35~Inner15~#FFFFAA~false~false~false~~",\n  "36~Inner16~#99842F~false~false~false~~",\n  "37~Inner17~#2E4756~false~false~false~~",\n  "38~Inner18~#3535FF~false~false~false~~",\n  "39~Inner19~#8000BC~false~false~false~~",\n  "40~Inner20~#43AE5F~false~false~false~~",\n  "41~Inner21~#C3ECCE~false~false~false~~",\n  "42~Inner22~#728978~false~false~false~~",\n  "43~Inner23~#39503F~false~false~false~~",\n  "44~Inner24~#0C715D~false~false~false~~",\n  "45~Inner25~#5A8A80~false~false~false~~",\n  "46~Inner26~#2B937E~false~false~false~~",\n  "47~Inner27~#23999D~false~false~false~~",\n  "48~Inner28~#45B4E3~false~false~false~~",\n  "49~Inner29~#215DA1~false~false~false~~",\n  "50~Inner30~#4564D7~false~false~false~~",\n  "51~Inner31~#6969E9~false~false~false~~",\n  "52~Inner32~#9069E9~false~false~false~~",\n  "99~ComponentShapeLayer~#00CCCC~false~false~false~",\n  "100~LeadShapeLayer~#CC9999~false~false~false~",\n  "Hole~Hole~#222222~~false~true~",\n  "DRCError~DRCError~#FAD609~~false~true~"\n],\n"objects": [\n  "All~true~false",\n  "Component~true~true",\n  "Prefix~true~true",\n  "Name~true~false",\n  "Track~true~true",\n  "Pad~true~true",\n  "Via~true~true",\n  "Hole~true~true",\n  "Copper_Area~true~true",\n  "Circle~true~true",\n  "Arc~true~true",\n  "Solid_Region~true~true",\n  "Text~true~true",\n  "Image~true~true",\n  "Rect~true~true",\n  "Dimension~true~true",\n  "Protractor~true~true"\n],'
-)
+f.write('    ],\n"layers": [\n  "1~TopLayer~#FF0000~true~false~true~",\
+\n  "2~BottomLayer~#0000FF~true~false~true~",\n  "3~TopSilkLayer~#FFCC00\
+~true~false~true~",\n  "4~BottomSilkLayer~#66CC33~true~true~true~",\
+\n  "5~TopPasteMaskLayer~#808080~true~false~true~",\n  "6~BottomPasteMaskLayer\
+~#800000~true~false~true~",\n  "7~TopSolderMaskLayer~#800080~true~false~true\
+~0.3",\n  "8~BottomSolderMaskLayer~#AA00FF~true~false~true~0.3",\
+\n  "9~Ratlines~#6464FF~false~false~true~",\n  "10~BoardOutLine~#FF00FF~true\
+~false~true~",\n  "11~Multi-Layer~#C0C0C0~true~false~true~",\n  "12~Document\
+~#FFFFFF~true~false~true~",\n  "13~TopAssembly~#33CC99~false~false~false~",\
+\n  "14~BottomAssembly~#5555FF~false~false~false~",\n  "15~Mechanical~#F022F0\
+~false~false~false~",\n  "19~3DModel~#66CCFF~false~false~false~",\
+\n  "21~Inner1~#999966~false~false~false~~",\n  "22~Inner2~#008000~false~false\
+~false~~",\n  "23~Inner3~#00FF00~false~false~false~~",\n  "24~Inner4~#BC8E00\
+~false~false~false~~",\n  "25~Inner5~#70DBFA~false~false~false~~",\
+\n  "26~Inner6~#00CC66~false~false~false~~",\n  "27~Inner7~#9966FF~false~false\
+~false~~",\n  "28~Inner8~#800080~false~false~false~~",\n  "29~Inner9~#008080\
+~false~false~false~~",\n  "30~Inner10~#15935F~false~false~false~~",\
+\n  "31~Inner11~#000080~false~false~false~~",\n  "32~Inner12~#00B400\
+~false~false~false~~",\n  "33~Inner13~#2E4756~false~false~false~~",\
+\n  "34~Inner14~#99842F~false~false~false~~",\n  "35~Inner15~#FFFFAA\
+~false~false~false~~",\n  "36~Inner16~#99842F~false~false~false~~",\
+\n  "37~Inner17~#2E4756~false~false~false~~",\n  "38~Inner18~#3535FF\
+~false~false~false~~",\n  "39~Inner19~#8000BC~false~false~false~~",\
+\n  "40~Inner20~#43AE5F~false~false~false~~",\n  "41~Inner21~#C3ECCE~false\
+~false~false~~",\n  "42~Inner22~#728978~false~false~false~~",\n  "43~Inner23\
+~#39503F~false~false~false~~",\n  "44~Inner24~#0C715D~false~false~false~~",\
+\n  "45~Inner25~#5A8A80~false~false~false~~",\n  "46~Inner26~#2B937E~false\
+~false~false~~",\n  "47~Inner27~#23999D~false~false~false~~",\n  "48~Inner28\
+~#45B4E3~false~false~false~~",\n  "49~Inner29~#215DA1~false~false~false~~",\
+\n  "50~Inner30~#4564D7~false~false~false~~",\n  "51~Inner31~#6969E9~false\
+~false~false~~",\n  "52~Inner32~#9069E9~false~false~false~~",\
+\n  "99~ComponentShapeLayer~#00CCCC~false~false~false~",\
+\n  "100~LeadShapeLayer~#CC9999~false~false~false~",\n  "Hole~Hole~#222222~\
+~false~true~",\n  "DRCError~DRCError~#FAD609~~false~true~"\n],\n"objects": [\
+\n  "All~true~false",\n  "Component~true~true",\n  "Prefix~true~true",\
+\n  "Name~true~false",\n  "Track~true~true",\n  "Pad~true~true",\
+\n  "Via~true~true",\n  "Hole~true~true",\n  "Copper_Area~true~true",\
+\n  "Circle~true~true",\n  "Arc~true~true",\n  "Solid_Region~true~true",\
+\n  "Text~true~true",\n  "Image~true~true",\n  "Rect~true~true",\
+\n  "Dimension~true~true",\n  "Protractor~true~true"\n],')
+# 写入内容
+f.write('\n  "BBox": {\n    "x": %.1f,\n    "y": %.1f,\
+\n    "width": %.1f,\n    "height": %.1f\n  }' %
+        ((lines_mil[0, 0] + lines_mil[2, 0]) / 2,
+         (lines_mil[0, 1] + lines_mil[2, 1]) / 2, x_size_mil, y_size_mil))
 # 写入内容
 f.write(
-    '\n  "BBox": {\n    "x": %.1f,\n    "y": %.1f,\n    "width": %.1f,\n    "height": %.1f\n  }'
-    % ((lines_mil[0, 0] + lines_mil[2, 0]) / 2,
-       (lines_mil[0, 1] + lines_mil[2, 1]) / 2, x_size_mil, y_size_mil))
-# 写入内容
-f.write(
-    ',\n  "preference": {\n    "hideFootprints": "",\n    "hideNets": ""\n  },\n  "DRCRULE": {\n    "Default": {\n      "trackWidth": 1,\n      "clearance": 0.6,\n      "viaHoleDiameter": 2.4,\n      "viaHoleD": 1.2\n    },\n    "isRealtime": false,\n    "isDrcOnRoutingOrPlaceVia": false,\n    "checkObjectToCopperarea": true,\n    "showDRCRangeLine": true\n  },\n  "netColors": {}\n}'
-)
+    ',\n  "preference": {\n    "hideFootprints": "",\n    "hideNets": ""\n  },\
+\n  "DRCRULE": {\n    "Default": {\n      "trackWidth": 1,\n      "clearance":\
+ 0.6,\n      "viaHoleDiameter": 2.4,\n      "viaHoleD": 1.2\n    },\
+\n    "isRealtime": false,\n    "isDrcOnRoutingOrPlaceVia": false,\
+\n    "checkObjectToCopperarea": true,\n    "showDRCRangeLine": true\n  },\
+\n  "netColors": {}\n}')
 f.close()
 
 # 生成图片信息文件
