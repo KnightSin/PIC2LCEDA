@@ -10,10 +10,13 @@
 @Desc    :  图片转LCEDA封装的程序入口
 '''
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
+from PyQt5.QtGui import QIcon
 from functools import partial
 import sys
 import ui
 import PIC2LCEDA
+
+ICO = QIcon
 
 
 # 选取文件
@@ -49,6 +52,7 @@ def on_clicked_btn_convert(ui):
     if res == 0:
         print("Convert Done")
         msg = QMessageBox()
+        msg.setWindowIcon(QIcon("img/ico.png"))
         msg.setText("转换完成")
         msg.setInformativeText("图片已成功转换为立创EDA的库")
         msg.setWindowTitle("温馨提示")
@@ -59,6 +63,7 @@ def on_clicked_btn_convert(ui):
     else:
         print("image missed！！！")
         msg = QMessageBox()
+        msg.setWindowIcon(QIcon("img/ico.png"))
         msg.setText("图片不见啦")
         msg.setInformativeText("可能还没有选择图片哟、或者选择的图片神秘消失了哟")
         msg.setWindowTitle("温馨提示")
@@ -71,6 +76,8 @@ def on_clicked_btn_convert(ui):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     MainWindow = QMainWindow()
+    MainWindow.setWindowIcon(QIcon("img/ico.png"))
+
     ui = ui.Ui_ui()
     ui.setupUi(MainWindow)
     ui.btn_convert.clicked.connect(partial(on_clicked_btn_convert, ui))
