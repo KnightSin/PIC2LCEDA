@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ui</class>
+ <widget class="QWidget" name="ui">
+  <property name="windowModality">
+   <enum>Qt::ApplicationModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>700</width>
+    <height>480</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>700</width>
+    <height>480</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>700</width>
+    <height>480</height>
+   </size>
+  </property>
+  <property name="font">
+   <font>
+    <family>Arial</family>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>图片转LCEDA封装库生成器</string>
+  </property>
+  <widget class="QPushButton" name="btn_convert">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>400</y>
+     <width>171</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>生成图片</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="invert_f">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>220</y>
+     <width>181</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>图像取反</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="x_size">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>120</y>
+     <width>100</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <double>1.000000000000000</double>
+   </property>
+   <property name="maximum">
+    <double>999.990000000000009</double>
+   </property>
+   <property name="value">
+    <double>88.000000000000000</double>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>120</y>
+     <width>191</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>X最大尺寸/mm</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>220</y>
+     <width>181</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Y最大尺寸/mm</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>320</y>
+     <width>131</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>线宽/mil</string>
+   </property>
+  </widget>
+  <widget class="QDoubleSpinBox" name="y_size">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>220</y>
+     <width>100</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <double>1.000000000000000</double>
+   </property>
+   <property name="maximum">
+    <double>999.990000000000009</double>
+   </property>
+   <property name="value">
+    <double>88.000000000000000</double>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="width">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>320</y>
+     <width>100</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="minimum">
+    <number>1</number>
+   </property>
+   <property name="value">
+    <number>5</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="l_layer">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>120</y>
+     <width>81</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>层级</string>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="threshold">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>320</y>
+     <width>100</width>
+     <height>45</height>
+    </rect>
+   </property>
+   <property name="maximum">
+    <number>255</number>
+   </property>
+   <property name="value">
+    <number>125</number>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>320</y>
+     <width>151</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>图像阈值</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="layer">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>120</y>
+     <width>191</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="currentText">
+    <string>顶层阻焊层</string>
+   </property>
+   <property name="currentIndex">
+    <number>6</number>
+   </property>
+   <property name="maxVisibleItems">
+    <number>11</number>
+   </property>
+   <property name="insertPolicy">
+    <enum>QComboBox::NoInsert</enum>
+   </property>
+   <item>
+    <property name="text">
+     <string>顶层</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>底层</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>顶层丝印层</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>底层丝印层</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>顶层焊盘层</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>底层焊盘层</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>顶层阻焊层</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>底层阻焊层</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>边框层</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>文档层</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QToolButton" name="btn_getfile">
+   <property name="geometry">
+    <rect>
+     <x>551</x>
+     <y>40</y>
+     <width>121</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>选取文件</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>40</y>
+     <width>121</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>图片路径</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="sourcefullpath">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>40</y>
+     <width>391</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>/home/kearney/Documents/Lan/PIC2LCEDA/ddl.bmp</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
