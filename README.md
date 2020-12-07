@@ -5,7 +5,8 @@ LCEDA图片转换器
 简介：可将图片转换为立创EDA的PCB库文件，然后在立创EDA中以导入库的方式导入图像。
 优点是导入后的图片较立创EDA自带的图片工具清晰度更高更细腻。
 
-![deepin20 linux下效果预览][1]
+![win10下效果预览][1]
+![avatar](https://image.lceda.cn/pullimage/2sn0T1YLOZSa1gTZYOoLbB2pJrnzIGx8H9TDlWlr.png)
 # 使用说明
 - 处理图片：参考[PCB照片_附带生成脚本](https://lceda.cn/Knight_Sin/PCBzhao-pian)，非必需，当然处理后更好看。
 - 生成LIB：启动程序后，点击选取文件选取要转换的图片文件（当前仅支持一次一张），然后对各个参数进行修改，不修改将保持默认参数，设置好参数后点击生成图片，生成完成之后会弹出提示框提示转换完成，生成的Lib位于所选择图片相同目录下。  
