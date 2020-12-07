@@ -3,39 +3,48 @@ import numpy as np
 from numpy import mat
 import datetime
 import os
+import chardet
+
+# 显示图片
 
 
-# 正常转换返回0，图片不存在返回-1
-def makepcb(sourcefullpath, x_size, y_size, width, layer, invert_f, threshold):
-    # 由文件绝对路径分离出路径和文件名
+def showImg(img, k):
+    img = cv2.resize(img, (0, 0), fx=k, fy=k, interpolation=cv2.INTER_NEAREST)
+    cv2.imshow('preview', img)
+
+# 拆分文件路径
+
+
+def getpath(sourcefullpath):
     if os.path.isfile(sourcefullpath):
         (sourcepath, sourcename) = os.path.split(sourcefullpath)
-        print((sourcepath, sourcename))
+        #print((sourcepath, sourcename))
+        return sourcepath, sourcename
     else:
         return -1  # 图片文件不存在！！！
 
-    path = os.path.join(
-        sourcepath,
-        'LCEDA' + str(datetime.datetime.now().strftime("%Y-%m-%d_%H_%M_%S")))
-    if not os.path.exists(path):
-        # 如果不存在则创建目录,win目录不能含有冒号
-        os.makedirs(path)
+# 图片转换
 
-    lib_filename = 'LIB_' + sourcename + '.json'  # Lib文件名
-    pcb_filename = 'PCB_' + sourcename + '.json'  # PCB文件名
+
+def transformpic(sourcefullpath, x_size, y_size, width, layer, color_invert_f, x_invert_f, y_invert_f, threshold):
+    # 由文件绝对路径分离出路径和文件名
+    if getpath(sourcefullpath) == -1:
+        return -1
 
     # 单位转换
     x_size_mil = int(x_size / 2.54 * 100)
     y_size_mil = int(y_size / 2.54 * 100)
 
     # 图片处理
-    # 将数据存储在I矩阵
-    img = cv2.imread(sourcefullpath)
-    # 备份原图
-    cv2.imwrite(os.path.join(path, 'pre.jpg'), img,
-                [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+    # 读取源图片数据
+    #img = cv2.imread(sourcefullpath)
+    img = cv2.imdecode(np.fromfile(
+        sourcefullpath, dtype=np.uint8), -1)   # 中文路径解决方式
     # 图片缩放
-    im_raw, im_col = img.shape[0:2]
+    try:
+        im_raw, im_col = img.shape[0:2]
+    except:
+        return -1
     if im_raw / y_size_mil > im_col / x_size_mil:
         k = y_size_mil / im_raw
         x_size_mil = int(im_col * k) + 1
@@ -44,7 +53,7 @@ def makepcb(sourcefullpath, x_size, y_size, width, layer, invert_f, threshold):
         y_size_mil = int(im_raw * k) + 1
     img = cv2.resize(img, (int(im_col * k / width), int(im_raw * k / width)))
     # 色相取反
-    if invert_f != 0:
+    if color_invert_f != 0:
         img = cv2.bitwise_not(img)
     # 拓展边缘
     img = cv2.copyMakeBorder(img,
@@ -57,18 +66,52 @@ def makepcb(sourcefullpath, x_size, y_size, width, layer, invert_f, threshold):
     # 去色
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # 二值化
-    ret, img = cv2.threshold(img, threshold, 255, cv2.THRESH_BINARY)
-    # img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-    #                             cv2.THRESH_BINARY, 11, 2)
+    img = cv2.threshold(img, threshold, 255, cv2.THRESH_BINARY)[1]
+    # img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
     # 翻转图片
     if layer == 2 or layer == 4 or layer == 6 or layer == 8:
         img = cv2.flip(img, 1)
     # 旋转
     # img = img.transpose()
-    # 备份处理后的图片
-    cv2.imwrite(os.path.join(path, 'after.jpg'), img,
-                [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+    if x_invert_f != 0:
+        img = cv2.flip(img, 1)
+    if y_invert_f != 0:
+        img = cv2.flip(img, 0)
+    return img, x_size_mil, y_size_mil, im_raw, im_col
 
+# 转换生成库文件，正常转换返回0，图片不存在返回-1
+
+
+def makepcb(sourcefullpath, x_size, y_size, width, layer, color_invert_f, copper_f, x_invert_f, y_invert_f, threshold):
+    # 由文件绝对路径分离出路径和文件名
+    if getpath(sourcefullpath) != -1:
+        (sourcepath, sourcename) = getpath(sourcefullpath)
+        path = os.path.join(
+            sourcepath,
+            'LCEDA_' + sourcename.split('.')[0] + '_' + str(datetime.datetime.now().strftime("%Y-%m-%d_%H_%M_%S")))
+        #print(path)
+        if not os.path.exists(path):
+            # 如果不存在则创建目录,win目录不能含有冒号
+            os.makedirs(path)
+    else:
+        return -1
+    lib_filename = 'LIB_' + sourcename.split('.')[0] + '.json'  # Lib文件名
+    pcb_filename = 'PCB_' + sourcename.split('.')[0] + '.json'  # PCB文件名
+    # 备份原图
+    #cv2.imwrite(os.path.join(path, 'pre.jpg'), img2, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+    img2 = cv2.imdecode(np.fromfile(
+        sourcefullpath, dtype=np.uint8), -1)    # 中文路径解决方式
+    cv2.imencode('.jpg', img2)[1].tofile(
+        os.path.join(path, 'pre.jpg'))     # 中文路径解决方式
+    if transformpic(sourcefullpath, x_size, y_size, width, layer, color_invert_f, x_invert_f, y_invert_f, threshold) != -1:
+        (img, x_size_mil, y_size_mil, im_raw, im_col) = transformpic(sourcefullpath,
+                                                                     x_size, y_size, width, layer, color_invert_f, x_invert_f, y_invert_f, threshold)
+    else:
+        return -1
+    # 备份处理后的图片
+    #cv2.imwrite(os.path.join(path, 'after.jpg'), img, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
+    cv2.imencode('.jpg', img)[1].tofile(
+        os.path.join(path, 'after.jpg'))    # 中文路径解决方式
     # 将图片处理成线条
     # 图片-> 线段
     #   o------>x (col)     o---0-->o
@@ -116,7 +159,8 @@ def makepcb(sourcefullpath, x_size, y_size, width, layer, invert_f, threshold):
 \n        "pre": "PIC?",\n        "Contributor": "LCNB",\
 \n        "link": ""\n      },\n      "hasIdFlag": true,\
 \n      "x": %.4f,\n      "y": %.4f\n    },\n' %
-        (sourcename.split('.', 1)[0], (lines_mil[0, 0] + lines_mil[2, 0]) / 2,
+        (sourcename.split('.', 1)[0],
+         (lines_mil[0, 0] + lines_mil[2, 0]) / 2,
          (lines_mil[0, 1] + lines_mil[2, 1]) / 2))
     # 写入内容
     f.write(
@@ -127,30 +171,29 @@ def makepcb(sourcefullpath, x_size, y_size, width, layer, invert_f, threshold):
 
     report_f = 1
     # 写入实心填充-铜皮数据
-    f.write(
-        '    "SOLIDREGION~1~~M %.4f %.4f L %.4f %.4f L %.4f %.4f L%.4f,%.4f Z~\
-solid~ggb0~~~~0",\n' % (
-            lines_mil[0, 0],
-            lines_mil[0, 1],
-            lines_mil[0, 2],
-            lines_mil[0, 3],
-            lines_mil[2, 0],
-            lines_mil[2, 1],
-            lines_mil[2, 2],
-            lines_mil[2, 3],
-        ))
-    f.write(
-        '    "SOLIDREGION~2~~M %.4f %.4f L %.4f %.4f L %.4f %.4f L%.4f,%.4f Z~\
-solid~ggb1~~~~0",\n' % (
-            lines_mil[0, 0],
-            lines_mil[0, 1],
-            lines_mil[0, 2],
-            lines_mil[0, 3],
-            lines_mil[2, 0],
-            lines_mil[2, 1],
-            lines_mil[2, 2],
-            lines_mil[2, 3],
-        ))
+    if copper_f == 2:
+        f.write(
+            '    "SOLIDREGION~1~~M %.4f %.4f L %.4f %.4f L %.4f %.4f L%.4f,%.4f Z~solid~ggb0~~~~0",\n' % (
+                lines_mil[0, 0],
+                lines_mil[0, 1],
+                lines_mil[0, 2],
+                lines_mil[0, 3],
+                lines_mil[2, 0],
+                lines_mil[2, 1],
+                lines_mil[2, 2],
+                lines_mil[2, 3],
+            ))
+        f.write(
+            '    "SOLIDREGION~2~~M %.4f %.4f L %.4f %.4f L %.4f %.4f L%.4f,%.4f Z~solid~ggb1~~~~0",\n' % (
+                lines_mil[0, 0],
+                lines_mil[0, 1],
+                lines_mil[0, 2],
+                lines_mil[0, 3],
+                lines_mil[2, 0],
+                lines_mil[2, 1],
+                lines_mil[2, 2],
+                lines_mil[2, 3],
+            ))
     # 写入边框数据
     for i in range(4):
         f.write('    "TRACK~1~%d~~%.4f %.4f %.4f %.4f~ggc%d~0",\n' %
@@ -310,13 +353,18 @@ false~",\n  "Hole~Hole~#222222~~false~true~",\n  "DRCError~DRCError~#FAD609\
     f.write('| y实际像素\t| %.4f pix\n' % y_size_mil)
     f.write('| X实际尺寸\t| %.4f mm\n' % (x_size_mil / 100 * 2.54))
     f.write('| y实际尺寸\t| %.4f mm\n' % (y_size_mil / 100 * 2.54))
-    f.write('| 所在层\t\t| %s\n' % layer)
+    layerstr = ['NULL', '顶层', '底层', '顶层丝印层', '底层丝印层',
+                '顶层焊盘层', '底层焊盘层', '顶层阻焊层', '底层阻焊层', '边框层', '文档层']
+    f.write('| 所在层\t\t| %s\n' % layerstr[layer])
     f.write('| 源文件路径\t| %s\n' % sourcepath)
     f.write('| 源文件名称\t| %s\n' % sourcename)
     f.write('| 生成文件路径\t| %s\n' % path)
     f.write('| Lib文件名称\t| %s\n' % lib_filename)
     f.write('| Lib文件名称\t| %s\n' % pcb_filename)
-    f.write('| 图像取反\t| %s\n' % ('true' if invert_f == 1 else 'false'))
+    f.write('| 图像取反\t| %s\n' % ('true' if color_invert_f != 0 else 'false'))
+    f.write('| 水平翻转\t| %s\n' % ('true' if x_invert_f != 0 else 'false'))
+    f.write('| 垂直翻转\t| %s\n' % ('true' if y_invert_f != 0 else 'false'))
+    f.write('| 创建铜皮\t| %s\n' % ('true' if copper_f != 0 else 'false'))
     f.write("| 阈值\t\t| %d\n" % threshold)
     f.close()
     # 完成

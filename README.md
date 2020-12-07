@@ -1,9 +1,9 @@
 
 # PIC2LCEDA
-立创EDA_PCB照片生成器  
+LCEDA图片转换器
 作者：矛盾聚合体  
-可将图片转换为立创EDA的库，然后在PCB中以库的方式导入图像。  
-优点是导入后的图片清晰度更高更细腻。
+可将图片转换为立创EDA的PCB库文件，然后在立创EDA中以导入库的方式导入图像。  
+优点是导入后的图片较立创EDA自带的图片工具清晰度更高更细腻。
 
 ![deepin20 linux下效果预览][1]
 # 使用说明
@@ -45,7 +45,6 @@ $ python3 main.py
 # License
 GPL-3.0 License
 # Reference
-- [KnightSin/PIC2LCEDA](https://github.com/KnightSin/PIC2LCEDA/blob/master/1.png)
 - [PCB照片_附带生成脚本](https://lceda.cn/Knight_Sin/PCBzhao-pian)
 - [立创EDA文档格式-标准版](https://docs.lceda.cn/cn/DocumentFormat/EasyEDA-Format-Standard/index.html)
 - [no module named cv2](https://www.cnblogs.com/zjutzz/p/11944662.html)
