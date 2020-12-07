@@ -19,6 +19,7 @@ GUI_v0.0.1版本的图片拖动功能**暂未完善**、请使用‘选择文件
 windows、Linux已经编译好的程序（By pyinstaller）见Release或者百度网盘
 
 [20201201win+linuxV0.0.0 提取码: yirq](https://pan.baidu.com/s/1uG6g0DEBkowuJXRK9za9VA)
+
 [20201207win_GUI_v0.0.1  提取码: LCNB](https://pan.baidu.com/s/13-7_hlm7JqN-HB11WSxHig)
 
 ## 方法二：自行编译
