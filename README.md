@@ -1,5 +1,6 @@
 # PIC2LCEDA
 LCEDA图片转换器
+
 作者：矛盾聚合体 & Kearney
 
 简介：可将图片转换为立创EDA的PCB库文件，然后在立创EDA中以导入库的方式导入图像。  
