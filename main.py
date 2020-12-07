@@ -1,14 +1,5 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
-'''
-@File    :  main.py
-@Time    :  2020/12/03 23:32:20
-@Author  :  Kearney
-@Version :  0.0.0
-@Contact :  191615342@qq.com
-@License :  GPL 3.0
-@Desc    :  图片转LCEDA封装的程序入口
-'''
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
 from PyQt5.QtGui import QIcon
 from functools import partial
@@ -38,7 +29,8 @@ def refreshImg():
         layer = layer_index + 2
 
     if PIC2LCEDA.transformpic(sourcefullpath, x_size, y_size, width, layer, color_invert_f, x_invert_f, y_invert_f, threshold) != -1:
-        img = PIC2LCEDA.transformpic(sourcefullpath, x_size, y_size, width, layer, color_invert_f, x_invert_f, y_invert_f, threshold)[0]
+        img = PIC2LCEDA.transformpic(sourcefullpath, x_size, y_size, width,
+                                     layer, color_invert_f, x_invert_f, y_invert_f, threshold)[0]
     else:
         print("image missed！！！")
         msg = QMessageBox()
@@ -180,6 +172,3 @@ if __name__ == '__main__':
 
     MainWindow.show()
     sys.exit(app.exec_())
-
-# 将.ui文件转化成/.py文件
-# python -m PyQt5.uic.pyuic form.ui -o ui.py
